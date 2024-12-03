@@ -14,25 +14,25 @@ void get_cpu_info() {
     string vendor_id;
     if (cpuinfo.is_open()) {
         while (getline(cpuinfo, line)) {
-            if (line.find("model name") != std::string::npos) {
+            if (line.find("model name") != string::npos) {
                 model_name = line.substr(line.find(":") + 2);
-            }
-            if (line.find("vendor_id") != std::string::npos) {
+        }
+            if (line.find("vendor_id") != string::npos) {
                 vendor_id = line.substr(line.find(":") + 2);
             }
         }
         cpuinfo.close();
         if (!vendor_id.empty())
-            std::cout << "CPU Type: " << vendor_id << std::endl;
+            cout <<"CPU Type: "<< vendor_id << endl;
         if (!model_name.empty())
-            std::cout << "CPU Model: " << model_name << std::endl;
+            cout <<"CPU Model: "<< model_name << endl;
     } else {
-        cerr << "Unable to open /proc/cpuinfo" << std::endl;
+        cerr << "Unable to open /proc/cpuinfo" << endl;
     }
 }
 int main() {
-    cout << "Linux Kernel Behavior Report" << std::endl;
-    cout << "----------------------------" << std::endl;
+    cout << "Linux Kernel Behavior Report" << endl;
+    cout << "----------------------------" << endl;
     get_kernel_version();
     get_cpu_info();
     return 0;
