@@ -1,18 +1,19 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+using namespace std;
 void report_memory_info() {
-    std::ifstream meminfo("/proc/meminfo");
-    std::string line;
+    ifstream meminfo("/proc/meminfo");
+    string line;
     long total_memory = 0;
     long free_memory = 0;
     if (meminfo.is_open()) {
-        while (std::getline(meminfo, line)) {
+        while (getline(meminfo, line)) {
             if (line.find("MemTotal:") == 0) {
-                total_memory = std::stol(line.substr(line.find(":") + 1));
+                total_memory = stol(line.substr(line.find(":") + 1));
             }
             if (line.find("MemFree:") == 0) {
-                free_memory = std::stol(line.substr(line.find(":") + 1));
+                free_memory =stol(line.substr(line.find(":") + 1));
             }
             if (total_memory > 0 && free_memory > 0) {
                 break;
@@ -20,18 +21,18 @@ void report_memory_info() {
         }
         meminfo.close();
         long used_memory = total_memory - free_memory;
-        std::cout << "Memory Information:" << std::endl;
-        std::cout << "-------------------" << std::endl;
-        std::cout << "Configured Memory: " << total_memory / 1024 << " MB" << std::endl;
-        std::cout << "Free Memory:       " << free_memory / 1024 << " MB" << std::endl;
-        std::cout << "Used Memory:       " << used_memory / 1024 << " MB" << std::endl;
+        cout << "Memory Information:" << endl;
+        cout << "-------------------" << endl;
+        cout << "Configured Memory: " << total_memory / 1024 << " MB" << endl;
+        cout << "Free Memory:       " << free_memory / 1024 << " MB" << endl;
+        cout << "Used Memory:       " << used_memory / 1024 << " MB" << endl;
     } else {
-        std::cerr << "Unable to open /proc/meminfo" << std::endl;
+        cerr << "Unable to open /proc/meminfo" << endl;
     }
 }
 int main() {
-    std::cout << "Linux Kernel Memory Report" << std::endl;
-    std::cout << "--------------------------" << std::endl;
+    cout << "Linux Kernel Memory Report" << endl;
+    cout << "--------------------------" << endl;
     report_memory_info();
     return 0;
 }
