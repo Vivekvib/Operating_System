@@ -1,25 +1,37 @@
-#include&lt;stdio.h&gt;
-#include&lt;sys/sysinfo.h&gt;
-#include&lt;stdlib.h&gt;
-#include&lt;sys/utsname.h&gt;
-using namespace std;
-int main()
-{
-    int p = 0 , q = 0;
-    struct sysinfo un;
-    p = sysinfo(&amp;un);
-    struct utsname s1;
-    q = uname(&amp;s1);
-    if(p==0 &amp;&amp; q==0)
-    {
-        printf("\n Kerner version : %s", s1.version);
-        printf("\n Total RAM : %ld MB \n", (un.totalram));
-        printf("\n Free RAM : %ld MB \n", (un.freeram));
-        printf("\n Used RAM : %ld MB \n", (un.totalram-un.freeram))
+#include <iostream>
+#include <fstream>
+#include <string>
+void report_memory_info() {
+    std::ifstream meminfo("/proc/meminfo");
+    std::string line;
+    long total_memory = 0;
+    long free_memory = 0;
+    if (meminfo.is_open()) {
+        while (std::getline(meminfo, line)) {
+            if (line.find("MemTotal:") == 0) {
+                total_memory = std::stol(line.substr(line.find(":") + 1));
+            }
+            if (line.find("MemFree:") == 0) {
+                free_memory = std::stol(line.substr(line.find(":") + 1));
+            }
+            if (total_memory > 0 && free_memory > 0) {
+                break;
+            }
+        }
+        meminfo.close();
+        long used_memory = total_memory - free_memory;
+        std::cout << "Memory Information:" << std::endl;
+        std::cout << "-------------------" << std::endl;
+        std::cout << "Configured Memory: " << total_memory / 1024 << " MB" << std::endl;
+        std::cout << "Free Memory:       " << free_memory / 1024 << " MB" << std::endl;
+        std::cout << "Used Memory:       " << used_memory / 1024 << " MB" << std::endl;
+    } else {
+        std::cerr << "Unable to open /proc/meminfo" << std::endl;
     }
-    else
-    {
-        printf("Error");
-    }   
+}
+int main() {
+    std::cout << "Linux Kernel Memory Report" << std::endl;
+    std::cout << "--------------------------" << std::endl;
+    report_memory_info();
     return 0;
 }
